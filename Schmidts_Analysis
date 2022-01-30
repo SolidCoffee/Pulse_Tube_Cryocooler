@@ -1,0 +1,423 @@
+%All in one sample code
+%https://core.ac.uk/download/pdf/53187851.pdf
+
+%%%Initialization%%%
+clc                 %Clears Command Window
+clear               %Clears Workspace Window (Variables in Memory)
+
+
+%PROGRAM NO. 1
+%TITLE: Pressure V/S Total volume
+%https://core.ac.uk/download/pdf/53187851.pdf
+
+%%%Initialization%%%
+clc                 %Clears Command Window
+clear               %Clears Workspace Window (Variables in Memory)
+
+%%%Code Body%%%
+
+%Inputs
+TE = 80;                                                %Temperature of the working fluid in expansion space, TE, Kelvin
+TC = 300;                                               %Temperature of the working fluid in the compression space, TC, Kelvin
+VE = 1*10^(-6);                                         %swept volume of the expansion space, VE, m^3
+Pmean = 25*10^(5);% 25 bar                              %Mean cycle-pressure, Pmean, pa
+alpha = 90;                                             %angle by which volume variations in expansion space lead those in the compression space, alpha, degrees                                                     
+x=1;                                                    %swept volume ratio, x, dimensionless
+y=2;                                                    %Dead volume ratio, y, dimensionless
+
+%Calculations
+VC=VE*x;                                                %swept volume of the compression space
+VD = y*VE;                                              %swept volume of the dead space, VD, m^3
+t = TC/TE;                                              %temperature ratio, t, dimensionless
+TD = (TE + TC)/2;                                       %Temperature of the working fluid in the dead space, TD, Kelvin
+S = (VD*TC)/(VE*TD);                                    %S constant, S, dimensionless
+theta = atand((x*sind(alpha))/(t + x*cosd(alpha)));     %Theta angle, theta, radians
+A = sqrt (t^2 + 2*t*x*cosd(alpha) + x^2 );              %A constant, A, dimensionless
+B = t + x + 2*S;                                        %B constant, B, dimensionless
+delta = A/B;                                            %delta constant, delta, dimensionless
+Pmax = Pmean*sqrt((1+delta)/(1-delta));                 %Maximum Pressure, Pmax, pa
+disp(Pmax);                                             %Display the value of Pmax
+
+%Loop
+fi=0;           %Phi, written as fi. From 0 to 360, capturing one full sweep cycle
+i=1;            %Array index, i, from 1 to 361 in the loop
+
+while(fi<(361)) %Goes from fi = 0 to fi = 360 and i = 1 to i = 361
+                %This is so one full sweep of 360 degrees can be
+                %calculated, but i is used to index the array since matlab
+                %cannot have arrays begin with 0
+    
+    p = Pmax*(1-delta)/(1+delta*cosd(fi-theta));    %Pressure waveform, p, pa
+    Ve = 0.5*VE*(1+cosd(fi));                       %Expansion space volume, Ve, m^3
+    Vc = 0.5*VC*(1+cosd(fi-alpha));                 %Compression space volume, Vc, m^3
+    V = VD + Vc + Ve;                               %Total Volume, V, m^3
+    P(i)= p;                                        %Pressure vector with index i, tabulating the value of p for all values of phi from 0 to 360
+    Vt(i)= V;                                       %Volume vector with index i, tabulating the value of V for all values of phi from 0 to 360
+    
+    fi=fi+1;                                        %incrementing value of phi by 1
+    i=i+1;                                          %incrementing value of index i by 1
+end
+
+disp(i);                                            %Display the value of i
+
+fi=[0:1:360];                                       %x variable, vector from 0 to 360, in 361 array positions
+
+%Plot P vs V diagram
+figure
+plot(Vt,P)
+title('Pressure vs Total volume')
+xlabel('Total Volume, Vt, m^3')
+ylabel('Pressure, P, pa')
+
+
+%PROGRAM NO. 2
+%TITLE: Pressure vs Expansion and Compression volume
+%https://core.ac.uk/download/pdf/53187851.pdf
+
+%%%Initialization%%%
+clc                 %Clears Command Window
+clear               %Clears Workspace Window (Variables in Memory)
+
+%%%Code Body%%%
+
+%Inputs
+TE = 80;                                                %Temperature of the working fluid in expansion space, TE, Kelvin
+TC = 300;                                               %Temperature of the working fluid in the compression space, TC, Kelvin
+VE = 1*10^(-6);                                         %swept volume of the expansion space, VE, m^3
+Pmean = 25*10^(5);% 25 bar                              %Mean cycle-pressure, Pmean, pa
+alpha = 90;                                             %angle by which volume variations in expansion space lead those in the compression space, alpha, degrees                                                     
+x=1;                                                    %swept volume ratio, x, dimensionless
+y=2;                                                    %Dead volume ratio, y, dimensionless
+
+%Calculations
+VC=VE*x;                                                %swept volume of the compression space
+VD = y*VE;                                              %swept volume of the dead space, VD, m^3
+t = TC/TE;                                              %temperature ratio, t, dimensionless
+TD = (TE + TC)/2;                                       %Temperature of the working fluid in the dead space, TD, Kelvin
+S = (VD*TC)/(VE*TD);                                    %S constant, S, dimensionless
+theta = atand((x*sind(alpha))/(t + x*cosd(alpha)));     %Theta angle, theta, radians
+A = sqrt (t^2 + 2*t*x*cosd(alpha) + x^2 );              %A constant, A, dimensionless
+B = t + x + 2*S;                                        %B constant, B, dimensionless
+delta = A/B;                                            %delta constant, delta, dimensionless
+
+Pmax = Pmean*sqrt((1+delta)/(1-delta));                 %Maximum Pressure, Pmax, pa
+disp(Pmax);                                             %Display the value of Pmax
+
+
+%Loop
+fi=0;           %Phi, written as fi. From 0 to 360, capturing one full sweep cycle
+i=1;            %Array index, i, from 1 to 361 in the loop
+
+while(fi<(361)) %Goes from fi = 0 to fi = 360 and i = 1 to i = 361
+                %This is so one full sweep of 360 degrees can be
+                %calculated, but i is used to index the array since matlab
+                %cannot have arrays begin with 0
+
+    p = Pmax*(1-delta)/(1+delta*cosd(fi-theta));    %Pressure waveform, p, pa
+    Ve = 0.5*VE*(1+cosd(fi));                       %Expansion space volume, Ve, m^3
+    Vc = 0.5*VC*(1+cosd(fi-alpha));                 %Compression space volume, Vc, m^3
+    P(i)= p;                                        %Pressure vector with index i, tabulating the value of p for all values of phi from 0 to 360    Ve1(i)= Ve;
+    Ve1(i)= Ve;
+    Vc1(i)= Vc;                                     %Compression Volume vector with index i, tabulating the value of Vc for all values of phi from 0 to 360
+    fi=fi+1;                                        %incrementing value of phi by 1
+    i=i+1;                                          %incrementing value of index i by 1
+end
+
+
+disp(i);                                            %Display the value of i
+
+fi=[0:1:360];                                       %x variable, vector from 0 to 360, in 361 array positions
+
+%PV diagrams for both the expansion and compression volumes
+figure
+subplot(2,1,1); plot(Ve1,P); 
+title('Pressure vs Expansion volume');
+xlabel('Expansion Volume, Ve, m^3')
+ylabel('Pressure, P, pa')
+subplot(2,1,2); plot(Vc1,P); title('Pressure vs Compression volume');
+xlabel('Compression Volume, Vc, m^3')
+ylabel('Pressure, P, pa')
+
+
+%PROGRAM NO.3
+%TITLE: (P max, P min, Qe, W, COP) v/s TC
+%https://core.ac.uk/download/pdf/53187851.pdf
+
+%%%Initialization%%%
+clc                 %Clears Command Window
+clear               %Clears Workspace Window (Variables in Memory)
+
+%%%Code Body%%%
+
+%Inputs
+TE = 80;                                                %Temperature of the working fluid in expansion space, TE, Kelvin
+TC = 280;                                               %Temperature of the working fluid in the compression space, TC, Kelvin
+VE = 1*10^(-6);                                         %swept volume of the expansion space, VE, m^3
+Pmean = 25*10^(5);% 25 bar                              %Mean cycle-pressure, Pmean, pa
+alpha = 90;                                             %angle by which volume variations in expansion space lead those in the compression space, alpha, degrees                                                     
+x=1;                                                    %swept volume ratio, x, dimensionless
+y=2;                                                    %Dead volume ratio, y, dimensionless
+
+%Calculations
+VC=VE*x;                                                %swept volume of the compression space
+VD = y*VE;                                              %swept volume of the dead space, VD, m^3
+
+%loop
+i=1;
+while(TC<(330.1))
+%TC goes from TC = 280 to TC = 330 in 0.1 increments
+
+    t = TC/TE;                                                              %temperature ratio, t, dimensionless
+    TD = (TE + TC)/2;                                                       %Temperature of the working fluid in the dead space, TD, Kelvin
+    S = (VD*TC)/(VE*TD);                                                    %S constant, S, dimensionless
+    theta = atand((x*sind(alpha))/(t + x*cosd(alpha)));                     %Theta angle, theta, radians
+    A = sqrt (t^2 + 2*t*x*cosd(alpha) + x^2 );                              %A constant, A, dimensionless
+    B = t + x + 2*S;                                                        %B constant, B, dimensionless
+    delta = A/B;                                                            %delta constant, delta, dimensionless
+    Pmax = Pmean*sqrt((1+delta)/(1-delta));                                 %Maximum Pressure, Pmax, pa
+    Pmin = Pmean*sqrt((1-delta)/(1+delta));                                 %Minimum Pressure, Pmin, pa
+    Q = (pi*Pmean*VE*delta*sind(theta))/(1 + sqrt( 1 - delta^2));          %heat transferred to the working fluid in expansion space, Qe, Watts
+    Qc = (pi*Pmean*VE*x*delta*sind(theta-alpha))/(1 + sqrt(1-delta^2));     %heat transferred in the compression space, Qc, Watts
+    w = Q - Qc;                                                            %Net work input, W, Watts
+    cop = Q/(Q - Qc);                                                     %Coefficient of Performance, COP, Dimensionless
+    Pm1(i)= Pmax;                                                           %Max Pressure vector with index i, tabulating the value of Pmax for all values of Tc
+    Pm2(i)= Pmin;                                                           %Min Pressure vector with index i, tabulating the value of Pmin for all values of Tc
+    Qe(i)= Q;                                                              %Qe vector with index i, tabulating the value of Qe for all values of Tc
+    W(i)= w;                                                                %W vector with index i, tabulating the value of W for all values of Tc
+    COP(i)= cop;                                                            %COP vector with index i, tabulating the value of COP for all values of Tc
+    i=i+1;                                                                  %incrementing value of index i by 1
+    TC=TC+0.1;                                                              %incrementing the value of TC by 0.1 Kelvin
+end
+
+disp(TC);                                                                   %Display the final value of TC in Kelvin
+disp(i);                                                                    %Display the final value of increment i
+
+%TC vector range
+TC=[280:0.1:330];
+
+%Plots
+figure
+subplot(5,1,4);
+plot(TC,Pm1); title('Pmax vs Hot end temperature');
+subplot(5,1,2);
+plot(TC,Pm2); title('Pmin vs Hot end Temperature');
+subplot(5,1,3);
+plot(TC,Qe); title('Refrigeration vs Hot end Temperature');
+subplot(5,2,1);
+plot(TC,W); title('Work done vs Hot end Temperature');
+subplot(5,2,2);
+plot(TC,COP); title('COP vs Hot end Temperature');
+
+
+%PROGRAM NO.4
+%TITLE: (P max, P min, Qe, W, COP) v/s α
+%https://core.ac.uk/download/pdf/53187851.pdf
+
+%%%Initialization%%%
+clc                 %Clears Command Window
+clear               %Clears Workspace Window (Variables in Memory)
+
+%%%Code Body%%%
+
+%Inputs
+TE = 80;                                                %Temperature of the working fluid in expansion space, TE, Kelvin
+TC = 300;                                               %Temperature of the working fluid in the compression space, TC, Kelvin
+VE = 1*10^(-6);                                         %swept volume of the expansion space, VE, m^3
+Pmean = 25*10^(5);% 25 bar                              %Mean cycle-pressure, Pmean, pa
+alpha = 60;                                             %angle by which volume variations in expansion space lead those in the compression space, alpha, degrees                                                     
+x=1;                                                    %swept volume ratio, x, dimensionless
+y=2;                                                    %Dead volume ratio, y, dimensionless
+
+%Calculations
+VD = y*VE;                                              %swept volume of the dead space, VD, m^3
+t = TC/TE;                                              %temperature ratio, t, dimensionless
+TD = (TE + TC)/2;                                       %Temperature of the working fluid in the dead space, TD, Kelvin
+S = (VD*TC)/(VE*TD);                                    %S constant, S, dimensionless
+
+%loop
+i=1;
+while(alpha<(131))
+%alpha goes from alpha = 60 to alpha = 130 in 1 degree increments
+
+    theta = atand((x*sind(alpha))/(t + x*cosd(alpha)));                     %Theta angle, theta, radians
+    A = sqrt (t^2 + 2*t*x*cosd(alpha) + x^2 );                              %A constant, A, dimensionless
+    B = t + x + 2*S;                                                        %B constant, B, dimensionless
+    delta = A/B;                                                            %delta constant, delta, dimensionless
+    Pmax = Pmean*sqrt((1+delta)/(1-delta));                                 %Maximum Pressure, Pmax, pa
+    Pmin = Pmean*sqrt((1-delta)/(1+delta));                                 %Minimum Pressure, Pmin, pa
+    Q = (pi*Pmean*VE*delta*sind(theta))/(1 + sqrt( 1 - delta^2));           %heat transferred to the working fluid in expansion space, Qe, Watts
+    Qc = (pi*Pmean*VE*x*delta*sind(theta-alpha))/(1 + sqrt(1-delta^2));     %heat transferred in the compression space, Qc, Watts
+    w = Q - Qc;                                                             %Net work input, W, Watts
+    cop = Q/(Q - Qc);                                                       %Coefficient of Performance, COP, Dimensionless
+    Pm1(i)= Pmax;                                                           %Max Pressure vector with index i, tabulating the value of Pmax for all values of Tc
+    Pm2(i)= Pmin;                                                           %Min Pressure vector with index i, tabulating the value of Pmin for all values of Tc
+    Qe(i)= Q;                                                               %Qe vector with index i, tabulating the value of Qe for all values of Tc
+    W(i)= w;                                                                %W vector with index i, tabulating the value of W for all values of Tc
+    COP(i)= cop;                                                            %COP vector with index i, tabulating the value of COP for all values of Tc
+    i=i+1;                                                                  %incrementing value of index i by 1
+    alpha = alpha + 1;                                                      %incrementing degree of alpha by 1 degree
+    % disp(y);
+end
+
+disp(alpha);
+disp(i);
+
+alpha = [60:1:130];
+% disp(x);
+disp(Qe);
+
+
+%plots
+figure
+subplot(5,1,4);
+plot(alpha,Pm1); title('Pmax vs alpha');
+subplot(5,1,2);
+plot(alpha,Pm2); title('Pmin vs alpha');
+subplot(5,1,3);
+plot(alpha,Qe); title('Refrigeration vs alpha');
+subplot(5,2,1);
+plot(alpha,W); title('Work done vs alpha');
+subplot(5,2,2);
+plot(alpha,COP); title('COP vs alpha');
+
+%PROGRAM NO.5
+%TITLE: (P max, P min, Qe, W, COP) v/s x
+%https://core.ac.uk/download/pdf/53187851.pdf
+
+%%%Initialization%%%
+clc                 %Clears Command Window
+clear               %Clears Workspace Window (Variables in Memory)
+
+%%%Code Body%%%
+
+%Inputs
+TE = 80;                                                %Temperature of the working fluid in expansion space, TE, Kelvin
+TC = 300;                                               %Temperature of the working fluid in the compression space, TC, Kelvin
+VE = 1*10^(-6);     % 1 cc expansion volume             %swept volume of the expansion space, VE, m^3
+Pmean = 25*10^(5);% 25 bar                              %Mean cycle-pressure, Pmean, pa
+alpha = 90;                                             %angle by which volume variations in expansion space lead those in the compression space, alpha, degrees                                                     
+x=0.8;                                                  %swept volume ratio, x, dimensionless
+y=2;                                                    %Dead volume ratio, y, dimensionless
+
+
+%Calculations
+VD = y*VE;                                              %swept volume of the dead space, VD, m^3
+t = TC/TE;                                              %temperature ratio, t, dimensionless
+TD = (TE + TC)/2;                                       %Temperature of the working fluid in the dead space, TD, Kelvin
+S = (VD*TC)/(VE*TD);                                    %S constant, S, dimensionless
+ 
+%loop
+i=1;
+while(x<(1.71))
+    theta = atand((x*sind(alpha))/(t + x*cosd(alpha)));                     %Theta angle, theta, radians
+    A = sqrt (t^2 + 2*t*x*cosd(alpha) + x^2 );                              %A constant, A, dimensionless
+    B = t + x + 2*S;                                                        %B constant, B, dimensionless
+    delta = A/B;                                                            %delta constant, delta, dimensionless
+    Pmax = Pmean*sqrt((1+delta)/(1-delta));                                 %Maximum Pressure, Pmax, pa
+    Pmin = Pmean*sqrt((1-delta)/(1+delta));                                 %Minimum Pressure, Pmin, pa
+    Q = (pi*Pmean*VE*delta*sind(theta))/(1 + sqrt( 1 - delta^2));           %heat transferred to the working fluid in expansion space, Qe, Watts
+    Qc = (pi*Pmean*VE*x*delta*sind(theta-alpha))/(1 + sqrt(1-delta^2));     %heat transferred in the compression space, Qc, Watts
+    w = Q - Qc;                                                             %Net work input, W, Watts
+    cop = Q/(Q - Qc);                                                       %Coefficient of Performance, COP, Dimensionless
+    Pm1(i)= Pmax;                                                           %Max Pressure vector with index i, tabulating the value of Pmax for all values of Tc
+    Pm2(i)= Pmin;                                                           %Min Pressure vector with index i, tabulating the value of Pmin for all values of Tc
+    Qe(i)= Q;                                                               %Qe vector with index i, tabulating the value of Qe for all values of Tc
+    W(i)= w;                                                                %W vector with index i, tabulating the value of W for all values of Tc
+    COP(i)= cop;                                                            %COP vector with index i, tabulating the value of COP for all values of Tc
+    i=i+1;                                                                  %incrementing value of index i by 1
+    % disp(i);
+    x=x+0.01;
+    % disp(x);
+end
+
+% disp(x);
+% disp(i);
+
+x = [0.8:0.01:1.7];
+
+% disp(x);
+disp(Qe);
+
+%Plots
+figure
+subplot(5,1,4);
+plot(x,Pm1); title('Pmax vs x');
+subplot(5,1,2);
+plot(x,Pm2); title('Pmin vs x');
+subplot(5,1,3);
+plot(x,Qe); title('Refrigeration vs x');
+subplot(5,2,1);
+plot(x,W); title('Work done vs x');
+subplot(5,2,2);
+plot(x,COP); title('COP vs x');
+
+%PROGRAM NO.6
+%TITLE: (P max, P min, Qe, W, COP) v/s 
+%https://core.ac.uk/download/pdf/53187851.pdf
+
+%%%Initialization%%%
+clc                 %Clears Command Window
+clear               %Clears Workspace Window (Variables in Memory)
+
+%%%Code Body%%%
+
+%Inputs
+TE = 80;                                                %Temperature of the working fluid in expansion space, TE, Kelvin
+TC = 300;                                               %Temperature of the working fluid in the compression space, TC, Kelvin
+VE = 1*10^(-6);     % 1 cc expansion volume             %swept volume of the expansion space, VE, m^3
+Pmean = 25*10^(5);% 25 bar                              %Mean cycle-pressure, Pmean, pa
+alpha = 90;                                             %angle by which volume variations in expansion space lead those in the compression space, alpha, degrees                                                     
+x=1;                                                    %swept volume ratio, x, dimensionless
+y=1;                                                    %Dead volume ratio, y, dimensionless
+
+%Calculations
+t = TC/TE;                                              %temperature ratio, t, dimensionless
+theta = atand((x*sind(alpha))/(t + x*cosd(alpha)));     %Theta angle, theta, radians
+A = sqrt (t^2 + 2*t*x*cosd(alpha) + x^2 );              %A constant, A, dimensionless
+TD = (TE + TC)/2;                                       %Temperature of the working fluid in the dead space, TD, Kelvin
+ 
+%loop
+i=1;
+while(y<(2.5))
+    %y goes from y = 1 to y = 2.5 in 0.1 increments
+    VD = y*VE;                                                              %swept volume of the dead space, VD, m^3
+    S = (VD*TC)/(VE*TD);                                                    %S constant, S, dimensionless
+    B = t + x + 2*S;                                                        %B constant, B, dimensionless
+    delta = A/B;                                                            %delta constant, delta, dimensionless
+    Pmax = Pmean*sqrt((1+delta)/(1-delta));                                 %Maximum Pressure, Pmax, pa
+    Pmin = Pmean*sqrt((1-delta)/(1+delta));                                 %Minimum Pressure, Pmin, pa
+    Q = (pi*Pmean*VE*delta*sind(theta))/(1 + sqrt( 1 - delta^2));           %heat transferred to the working fluid in expansion space, Qe, Watts
+    Qc = (pi*Pmean*VE*x*delta*sind(theta-alpha))/(1 + sqrt(1-delta^2));     %heat transferred in the compression space, Qc, Watts
+    w = Q - Qc;                                                             %Net work input, W, Watts
+    cop = Q/(Q - Qc);                                                       %Coefficient of Performance, COP, Dimensionless
+    Pm1(i)= Pmax;                                                           %Max Pressure vector with index i, tabulating the value of Pmax for all values of Tc
+    Pm2(i)= Pmin;                                                           %Min Pressure vector with index i, tabulating the value of Pmin for all values of Tc
+    Qe(i)= Q;                                                               %Qe vector with index i, tabulating the value of Qe for all values of Tc
+    W(i)= w;                                                                %W vector with index i, tabulating the value of W for all values of Tc
+    COP(i)= cop;                                                            %COP vector with index i, tabulating the value of COP for all values of Tc
+    i=i+1;                                                                  %incrementing index i by 1 every loop
+    % disp(i);
+    y=y+0.01;                                                               %incrementing y by 0.01
+    % disp(y);
+end
+
+disp(y);
+disp(i);
+
+y = [1:0.01:2.5];
+
+% disp(x);
+disp(Qe);
+
+%Plots
+figure
+subplot(5,1,4);
+plot(y,Pm1); title('Pmax vs y');
+subplot(5,1,2);
+plot(y,Pm2); title('Pmin vs y');
+subplot(5,1,3);
+plot(y,Qe); title('Refrigeration vs y');
+subplot(5,2,1);
+plot(y,W); title('Work done vs y');
+subplot(5,2,2);
+plot(y,COP); title('COP vs y');
