@@ -1,0 +1,22 @@
+%%porosity calculator%%
+%%Nylon only%% 
+%%treating as square wire that intersects%%
+clc
+clear
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%UDV (User Defined Variables %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+d=.010;          %diameter of single wire in mesh = thickness of mesh (in)
+M=40;           %MxM mesh size (will be converted depending on D later)
+D=0.5;           %ID of regen tubing and is = diameter of total mesh (in)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Solution %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Act_M=M*D;       %Actual mesh!!!! 
+
+V_m=(Act_M*d^2*D)+(Act_M*((d^2*D)-(Act_M*d^3)));  %Volume of wire mesh
+V_mt=d*D^2;                                       %Total possible volume
+
+Porosity=(1-(V_m/V_mt))*100                       %Porosity (%) of mesh
